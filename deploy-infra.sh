@@ -28,20 +28,21 @@ aws cloudformation deploy \
 
 # Deploy the CloudFormation template
 echo -e "\n\n=========== Deploying main.yml =============="
-aws cloudformation deploy \
+aws cloudformation create-stack \
   --region $REGION \
   --profile $CLI_PROFILE \
   --stack-name $STACK_NAME \
-  --template-file main.yml \
-  --no-fail-on-empty-changeset \
+  --template-body file://$(pwd)/main.yml \
+  # --no-fail-on-empty-changeset \
+  --disable-rollbak \
   --capabilities CAPABILITY_NAMED_IAM \
-  --parameter-overrides \
-    EC2InstanceType=$EC2_INSTANCE_TYPE \
-    GitHubOwner=$GH_OWNER \
-    GitHubRepo=$GH_REPO \
-    GitHubBranch=$GH_BRANCH \
-    GitHubPersonalAccessToken=$GH_ACCESS_TOKEN \
-    CodePipelineBucket=$CODEPIPELINE_BUCKET
+  --parameters \
+    ParameterKey=EC2InstanceType,ParameterValue=$EC2_INSTANCE_TYPE \
+    ParameterKey=GitHubOwner,ParameterValue=$GH_OWNER \
+    ParameterKey=GitHubRepo,ParameterValue=$GH_REPO \
+    ParameterKey=GitHubBranch,ParameterValue=$GH_BRANCH \
+    ParameterKey=GitHubPersonalAccessToken,ParameterValue=$GH_ACCESS_TOKEN \
+    ParameterKey=CodePipelineBucket,ParameterValue=$CODEPIPELINE_BUCKET
 
 if [ $? -eq 0 ]; then
   aws cloudformation list-exports \

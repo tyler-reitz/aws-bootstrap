@@ -217,7 +217,7 @@ Resources:
         ImageId: !Ref EC2AMI
         InstanceType: !Ref EC2InstanceType
         IamInstanceProfile:
-          Arn: !GetAtt SecurityGroup.GroupId
+          Arn: !GetAtt InstanceProfile.Arn
         Monitoring:
           Enabled: True
         SecurityGroupIds:

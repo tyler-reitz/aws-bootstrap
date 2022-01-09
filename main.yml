@@ -266,13 +266,13 @@ Resources:
             export LOGICAL_ID=`aws --region ${AWS::Region} ec2 describe-tags --filters "Name=resource-id,Values=${!INSTANCE_ID}" "Name=key,Values=aws:cloudformation:logical-id" | jq -r ".Tags[0].Value"`
 
             # Signal to CloudFormation that instance is ready
-            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --region ${AWS::Region} --resource Instance
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --region ${AWS::Region} --resource ${!LOGICAL_ID}
 
   Instance:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT15M
+        Timeout: PT5M
         Count: 1
     Properties:
       LaunchTemplate:
@@ -286,7 +286,7 @@ Resources:
     Type: AWS::EC2::Instance
     CreationPolicy:
       ResourceSignal:
-        Timeout: PT15M
+        Timeout: PT5M
         Count: 1
     Properties:
       LaunchTemplate:

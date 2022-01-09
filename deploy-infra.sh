@@ -33,8 +33,7 @@ aws cloudformation create-stack \
   --profile $CLI_PROFILE \
   --stack-name $STACK_NAME \
   --template-body file://$(pwd)/main.yml \
-  # --no-fail-on-empty-changeset \
-  --disable-rollbak \
+  --disable-rollback \
   --capabilities CAPABILITY_NAMED_IAM \
   --parameters \
     ParameterKey=EC2InstanceType,ParameterValue=$EC2_INSTANCE_TYPE \
@@ -47,5 +46,5 @@ aws cloudformation create-stack \
 if [ $? -eq 0 ]; then
   aws cloudformation list-exports \
     --profile awsbootstrap
-    --query "Exports[?Name=='InstanceEndpoint'].Value"
+    --query "Exports[?starts_with(Name,'InstanceEndpoint')].Value"
 fi

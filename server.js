@@ -1,7 +1,7 @@
 const { hostname } = require('os')
 const http = require('http')
 
-const MESSAGE = 'Hello World\n'
+const MESSAGE = `Hello World from ${hostname()}\n`
 const PORT = 8080
 
 const server = http.createServer((req, res) => {
@@ -11,6 +11,6 @@ const server = http.createServer((req, res) => {
 })
 
 server.listen(PORT, hostname, () => {
-  console.log(`Server running at http://${hostname}:${PORT}`)
+  console.log(`Server running at http://${hostname()}:${PORT}`)
 })
 

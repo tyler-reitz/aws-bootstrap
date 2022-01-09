@@ -195,7 +195,7 @@ Resources:
         - Ref: InstanceRole
 
   InstanceLaunchTemplate:
-    Type: AWS::EC2::LAUNCHTEMPLATE
+    Type: AWS::EC2::LaunchTemplate
     Metadata:
       AWS::CloudFormation::Init:
         config:

@@ -28,23 +28,38 @@ aws cloudformation deploy \
 
 # Deploy the CloudFormation template
 echo -e "\n\n=========== Deploying main.yml =============="
-aws cloudformation create-stack \
+aws cloudformation deploy \
   --region $REGION \
   --profile $CLI_PROFILE \
   --stack-name $STACK_NAME \
-  --template-body file://$(pwd)/main.yml \
-  --disable-rollback \
+  --template-file main.yml \
+  --no-fail-on-empty-changeset \
   --capabilities CAPABILITY_NAMED_IAM \
-  --parameters \
-    ParameterKey=EC2InstanceType,ParameterValue=$EC2_INSTANCE_TYPE \
-    ParameterKey=GitHubOwner,ParameterValue=$GH_OWNER \
-    ParameterKey=GitHubRepo,ParameterValue=$GH_REPO \
-    ParameterKey=GitHubBranch,ParameterValue=$GH_BRANCH \
-    ParameterKey=GitHubPersonalAccessToken,ParameterValue=$GH_ACCESS_TOKEN \
-    ParameterKey=CodePipelineBucket,ParameterValue=$CODEPIPELINE_BUCKET
+  --parameter-overrides \
+    EC2InstanceType=$EC2_INSTANCE_TYPE \
+    GitHubOwner=$GH_OWNER \
+    GitHubRepo=$GH_REPO \
+    GitHubBranch=$GH_BRANCH \
+    GitHubPersonalAccessToken=$GH_ACCESS_TOKEN \
+    CodePipelineBucket=$CODEPIPELINE_BUCKET
+
+# aws cloudformation create-stack \
+#   --region $REGION \
+#   --profile $CLI_PROFILE \
+#   --stack-name $STACK_NAME \
+#   --template-body file://$(pwd)/main.yml \
+#   --disable-rollback \
+#   --capabilities CAPABILITY_NAMED_IAM \
+#   --parameters \
+#     ParameterKey=EC2InstanceType,ParameterValue=$EC2_INSTANCE_TYPE \
+#     ParameterKey=GitHubOwner,ParameterValue=$GH_OWNER \
+#     ParameterKey=GitHubRepo,ParameterValue=$GH_REPO \
+#     ParameterKey=GitHubBranch,ParameterValue=$GH_BRANCH \
+#     ParameterKey=GitHubPersonalAccessToken,ParameterValue=$GH_ACCESS_TOKEN \
+#     ParameterKey=CodePipelineBucket,ParameterValue=$CODEPIPELINE_BUCKET
 
 if [ $? -eq 0 ]; then
   aws cloudformation list-exports \
     --profile awsbootstrap
-    --query "Exports[?starts_with(Name,'InstanceEndpoint')].Value"
+    --query "Exports[?ends_with(Name,'LBEndpoint')].Value"
 fi

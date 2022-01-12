@@ -70,6 +70,16 @@ Resources:
       DeploymentConfigName: CodeDeployDefault.AllAtOnce
       ServiceRoleArn: !GetAtt DeploymentRole.Arn
 
+  ProdDeploymentGroup:
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties:
+      DeploymentGroupName: prod
+      AutoScalingGroups:
+        - !GetAtt Prod.Outputs.ScalingGroup
+      ApplicationName: !Ref DeploymentApplication
+      DeploymentConfigName: CodeDeployDefault.OneAtATime
+      ServiceRoleArn: !GetAtt DeploymentRole.Arn
+
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
@@ -125,6 +135,21 @@ Resources:
                 ApplicationName: !Ref DeploymentApplication
                 DeploymentGroupName: !Ref StagingDeploymentGroup
               RunOrder: 1
+        - Name: Prod
+          Actions:
+            - Name: Prod
+              InputArtifacts:
+                - Name: Build
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: 1
+                Provider: CodeDeploy
+              Configuration:
+                ApplicationName: !Ref DeploymentApplication
+                DeploymentGroupName: !Ref ProdDeploymentGroup
+              RunOrder: 1
+
 
   PipelineWebhook:
     Type: AWS::CodePipeline::Webhook
@@ -150,10 +175,26 @@ Resources:
         EC2InstanceType: !Ref EC2InstanceType
         EC2AMI: !Ref EC2AMI
 
+  Prod:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: Staging
+    Properties:
+      TemplateURL: stage.yml
+      TimeoutInMinutes: 30
+      Parameters:
+        EC2InstanceType: !Ref EC2InstanceType
+        EC2AMI: !Ref EC2AMI
+
 Outputs:
   StagingLBEndpoint:
     Description: The DNS name for the staging LB
     Value: !GetAtt Staging.Outputs.LBEndpoint
     Export:
       Name: StagingLBEndpoint
+  ProdLBEndpoint:
+    Description: The DNS name for the prod LB
+    Value: !GetAtt Prod.Outputs.LBEndpoint
+    Export:
+      Name: ProdLBEndpoint
+
 

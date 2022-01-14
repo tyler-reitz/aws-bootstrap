@@ -22,6 +22,8 @@ Parameters:
     Type: String
     NoEcho: true
     Description: 'A Github personal access token with "repeo" and "admin:repo_hook" permissions.'
+  Domain:
+    Type: String
 
 Resources:
   DeploymentRole:
@@ -174,6 +176,8 @@ Resources:
       Parameters:
         EC2InstanceType: !Ref EC2InstanceType
         EC2AMI: !Ref EC2AMI
+        Domain: !Ref Domain
+        SubDomain: staging
 
   Prod:
     Type: AWS::CloudFormation::Stack
@@ -184,6 +188,8 @@ Resources:
       Parameters:
         EC2InstanceType: !Ref EC2InstanceType
         EC2AMI: !Ref EC2AMI
+        Domain: !Ref Domain
+        SubDomain: prod
 
 Outputs:
   StagingLBEndpoint:

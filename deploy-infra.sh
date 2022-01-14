@@ -14,6 +14,8 @@ AWS_ACCOUNT_ID=`aws sts get-caller-identity --profile awsbootstrap --query "Acco
 CODEPIPELINE_BUCKET="$STACK_NAME-$REGION-codepipeline-$AWS_ACCOUNT_ID"
 CFN_BUCKET="$STACK_NAME-cfn-$AWS_ACCOUNT_ID"
 
+DOMAIN=the-good-parts.com
+
 echo $CODEPIPELINE_BUCKET
 
 # Deploy static resources
@@ -60,7 +62,8 @@ aws cloudformation deploy \
     GitHubRepo=$GH_REPO \
     GitHubBranch=$GH_BRANCH \
     GitHubPersonalAccessToken=$GH_ACCESS_TOKEN \
-    CodePipelineBucket=$CODEPIPELINE_BUCKET
+    CodePipelineBucket=$CODEPIPELINE_BUCKET \
+    Domain=$DOMAIN
 
 # aws cloudformation create-stack \
 #   --region $REGION \

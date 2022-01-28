@@ -37,6 +37,6 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AE256
+              SSEAlgorithm: AES256
 
 

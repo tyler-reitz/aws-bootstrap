@@ -15,7 +15,11 @@ CODEPIPELINE_BUCKET="$STACK_NAME-$REGION-codepipeline-$AWS_ACCOUNT_ID"
 CFN_BUCKET="$STACK_NAME-cfn-$AWS_ACCOUNT_ID"
 
 DOMAIN=the-good-parts.com
+CERT=`aws acm list-certificates --region $REGION --profile awsbootstrap --output text \
+  --query "CertificateSummaryList[?DomainName=='$DOMAIN'].CertificateArn | [0]"`
 
+echo $DOMAIN
+echo $CERT
 echo $CODEPIPELINE_BUCKET
 
 # Deploy static resources
@@ -63,7 +67,8 @@ aws cloudformation deploy \
     GitHubBranch=$GH_BRANCH \
     GitHubPersonalAccessToken=$GH_ACCESS_TOKEN \
     CodePipelineBucket=$CODEPIPELINE_BUCKET \
-    Domain=$DOMAIN
+    Domain=$DOMAIN \
+    Certificate=$CERT
 
 # aws cloudformation create-stack \
 #   --region $REGION \

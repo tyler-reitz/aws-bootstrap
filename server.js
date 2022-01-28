@@ -22,17 +22,6 @@ if (fs.existsSync(httpsKey) && fs.existsSync(httpsCert)) {
   server.listen(HTTPSPORT, hostname, () => {
     console.log(`Server running at https://${hostname()}:${PORT}`)
   })
+} else {
+  console.log('Could not find certificate/key')
 }
-
-console.log('Starting http server')
-const MESSAGE = `Hello HTTP World from ${hostname()}\n in ${STACK_NAME}\n`
-const server = http.createServer((req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'text/plain')
-  res.end(MESSAGE)
-})
-
-server.listen(PORT, hostname, () => {
-  console.log(`Server running at http://${hostname()}:${PORT}`)
-})
-

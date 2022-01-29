@@ -51,6 +51,8 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/CloudWatchFullAccess
         - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforAWSCodeDeploy
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/service-role/CloudWatchAgentServerPolicy
       Policies:
         - PolicyName: ec2DescribeTags
           PolicyDocument:
